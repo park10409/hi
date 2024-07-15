@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>타겟 맞추기 게임</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+        #game-container {
+            position: relative;
+            width: 80%;
+            height: 500px;
+            margin: 20px auto;
+            background-color: #eaeaea;
+            border: 2px solid #ccc;
+            overflow: hidden;
+        }
+        #target {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: red;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        #score {
+            font-size: 1.5rem;
+            margin: 20px;
+        }
+        #game-over {
+            display: none;
+            font-size: 2rem;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>타겟 맞추기 게임</h1>
+    <div id="game-container">
+        <div id="target"></div>
+    </div>
+    <div id="score">점수: 0</div>
+    <div id="game-over">게임 오버! 점수: 0</div>
+
+    <script>
+        // 게임 설정
+        const target = document.getElementById('target');
+        const scoreDisplay = document.getElementById('score');
+        const gameOverDisplay = document.getElementById('game-over');
+        const gameContainer = document.getElementById('game-container');
+        
+        let score = 0;
+        let gameOver = false;
+
+        // 타겟을 랜덤한 위치로 이동시키는 함수
+        function moveTarget() {
+            if (gameOver) return;
+
+            const containerWidth = gameContainer.clientWidth;
+            const containerHeight = gameContainer.clientHeight;
+            const targetWidth = target.offsetWidth;
+            const targetHeight = target.offsetHeight;
+
+            const x = Math.random() * (containerWidth - targetWidth);
+            const y = Math.random() * (containerHeight - targetHeight);
+
+            target.style.left = `${x}px`;
+            target.style.top = `${y}px`;
+        }
+
+        // 타겟 클릭 시 점수 증가
+        target.addEventListener('click', () => {
+            if (gameOver) return;
+
+            score++;
+            scoreDisplay.textContent = `점수: ${score}`;
+            moveTarget();
+        });
+
+        // 타겟 이동 시점 설정
+        function startGame() {
+            gameOver = false;
+            score = 0;
+            scoreDisplay.textContent = `점수: ${score}`;
+            gameOverDisplay.style.display = 'none';
+
+            moveTarget();
+
+            setTimeout(() => {
+                if (!gameOver) {
+                    gameOver = true;
+                    gameOverDisplay.textContent = `게임 오버! 점수: ${score}`;
+                    gameOverDisplay.style.display = 'block';
+                }
+            }, 10000); // 10초 후에 게임 오버
+        }
+
+        startGame();
+    </script>
+</body>
+</html>
